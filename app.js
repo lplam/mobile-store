@@ -7,7 +7,7 @@ const routes = require('./routes')
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000
 
-app.use('/',routes);
+    app.use('/',routes);
 
 app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`);

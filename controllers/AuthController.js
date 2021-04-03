@@ -1,10 +1,22 @@
-const MidCustomer = require('../middlewares/AuthMiddleware')
+const MidAuth = require("../middlewares/AuthMiddleware");
 
-const login = (req, res) => {   
-    MidCustomer.login(req.body)
-    .then(data => res.json({data}))
-}
+const login = (req, res) =>
+  MidAuth.login(req.body)
+    .then((data) => res.json({ data }))
+    .catch((err) => res.json({ err }));
+
+const register = (req, res) =>
+  MidAuth.register(req.body)
+    .then((data) => res.json({ data }))
+    .catch((err) => res.json({ err }));
+
+const getProfile = (req, res) =>
+  MidAuth.getProfile(req.body)
+    .then((data) => res.json({ data }))
+    .catch((err) => res.json({ err }));
 
 module.exports = {
-    login
-}
+  login,
+  register,
+  getProfile,
+};

@@ -10,13 +10,7 @@ const register = (req, res) =>
     .then((data) => res.json({ data }))
     .catch((err) => res.json({ err }));
 
-const getProfile = (req, res) =>
-  MidAuth.getProfile(req.body)
-    .then((data) => res.json({ data }))
-    .catch((err) => res.json({ err }));
-
 module.exports = {
   login,
   register,
-  getProfile,
 };

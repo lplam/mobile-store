@@ -2,10 +2,12 @@ const customerModel = require("../models/core/customer");
 const MidCustomer = require("./CustomerMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {encodeToken} = require("../utils/hash");
 const { SECRET_KEY, EXPIRES_IN } = require("../constants");
 
 const login = ({ email, password }) => {
-  return MidCustomer.getUserByEmail(email).then((user) => {
+  return MidCustomer.getUserByEmail(email)
+    .then((user) => {
     if (!user) {
       return Promise.reject("Email doesn't exist!!");
     }
@@ -16,7 +18,7 @@ const login = ({ email, password }) => {
       id: user._id,
     };
     const result = {
-      token: jwt.sign(jwtData, SECRET_KEY, { expiresIn: EXPIRES_IN }),
+      token: encodeToken(jwtData),
       ...user._doc,
     };
     return result;

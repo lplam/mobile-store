@@ -5,13 +5,12 @@ const MidCustomer = require("./CustomerMiddleware");
 const MidAdmin = require("./AdminMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {encodeToken} = require("../utils/hash");
+const { encodeToken } = require("../utils/hash");
 const { SECRET_KEY, EXPIRES_IN } = require("../constants");
 
 // User
 const login = ({ email, password }) => {
-  return MidCustomer.getUserByEmail(email)
-    .then((user) => {
+  return MidCustomer.getUserByEmail(email).then((user) => {
     if (!user) {
       return Promise.reject("Email doesn't exist!!");
     }
@@ -53,21 +52,24 @@ const loginAdmin = ({ email, password }) => {
 
   return MidAdmin.getAdminByEmail(email)
     .then((admin) => {
-    if (!admin) {
-      return Promise.reject("Admin Account doesn't exist!!");
-    }
-    if (!bcrypt.compareSync(password, admin.password)) {
-      return Promise.reject("Password is not correct!");
-    }
-    const jwtData = {
-      id: admin._id,
-    };
-    const result = {
-      token: encodeToken(jwtData),
-      ...admin._doc,
-    };
-    return result;
-  });
+      if (!admin) {
+        return Promise.reject("Admin Account doesn't exist!!");
+      }
+      if (!bcrypt.compareSync(password, admin.password)) {
+        return Promise.reject("Password is not correct!");
+      }
+      const jwtData = {
+        id: admin._id,
+      };
+      const result = {
+        token: encodeToken(jwtData),
+        ...admin._doc,
+      };
+      return result;
+    })
+    .catch((err) => {
+      throw new Error("err: ", err);
+    });
 };
 module.exports = {
   login,

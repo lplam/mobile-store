@@ -6,4 +6,10 @@ const getProfile = (req, res) =>{
     .catch((err) => res.json({ err }));
 }
 
-module.exports = { getProfile };
+const changeForgotPassword = (req, res) =>{
+  MidCustomer.changeForgotPassword(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+module.exports = { getProfile,changeForgotPassword };

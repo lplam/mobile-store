@@ -26,7 +26,30 @@ const decodeToken = (req) => {
   }
 };
 
+const decodeTokenForgotPassWord = (req,res) => {
+  const token = req.body.token;
+  if (token) {
+    var jwtToken = token;
+    return jwt.verify(
+      jwtToken,
+      SECRET_KEY,
+      { expiresIn: EXPIRES_IN },
+      function (err, payload) {
+        if (err) {
+          return Promise.reject({ message: "Unauthorized user!" });
+        } else {
+          return Promise.resolve(payload);
+        }
+      }
+    );
+  } else {
+    res.status(401).json({ message: "Unauthorized user!" });
+  }
+};
+
+
 module.exports = {
   encodeToken,
   decodeToken,
+  decodeTokenForgotPassWord,
 };

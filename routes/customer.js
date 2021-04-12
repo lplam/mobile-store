@@ -4,7 +4,7 @@ const CustomerController = require("../controllers/CustomerController");
 const AdminController = require("../controllers/AdminController");
 
 const { isCustomerAuth } = require("../utils/authen");
-const { checkAuthen } = require("../utils/hash");
+const { checkAuthen,testCode } = require("../utils/hash");
 
 router.post("/login", AuthController.login);
 
@@ -17,6 +17,8 @@ router.get("/profile", isCustomerAuth, CustomerController.getProfile);
 router.post("/sendMail", AdminController.sendMailForgotPassword);
 
 router.patch("/changeForgotPassword", CustomerController.changeForgotPassword);
+
+router.post("/testCode", testCode);
 
 
 

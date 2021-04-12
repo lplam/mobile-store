@@ -3,7 +3,7 @@ const MidAdmin = require("../middlewares/AdminMiddleware");
 const MidUser = require("../middlewares/CustomerMiddleware");
 
 const isAdminAuth = (req, res, next) =>
-  decodeToken(req).then((data) =>
+  decodeToken(req,res).then((data) =>
     MidAdmin.getDetail(data.id).then((admin) => {
       if (!admin) {
         res.status(401).json({ message: "permision denied" });
@@ -15,7 +15,7 @@ const isAdminAuth = (req, res, next) =>
   );
 
 const isCustomerAuth = (req, res, next) =>
-  decodeToken(req).then((data) =>
+  decodeToken(req,res).then((data) =>
     MidUser.getProfile(data.id).then((user) => {
       if (!user) {
         res.status(401).json({ message: "permision denied" });

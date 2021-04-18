@@ -16,7 +16,7 @@ const forceDestroy = (req, res) => {
     .catch((err) => res.json({ err }));
 };
 const modify = (req, res) => {
-  ProductCustomer.modify(req)
+  ProductCustomer.modify(req,res)
     .then((data) => res.json({ message: "Modified Successfully!", data }))
     .catch((err) => res.json({ err }));
 };
@@ -27,11 +27,10 @@ const restore = (req, res) => {
     .catch((err) => res.json({ err }));
 };
 
-// restore(req, res, next) {
-//     course
-//         .restore({ _id: req.params.id })
-//         .then(() => res.redirect('back'))
-//         .catch(next);
-// }
+const search = (req, res) => {
+  ProductCustomer.search(req)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+  }
 
-module.exports = { create, destroy, modify, forceDestroy, restore };
+module.exports = { create, destroy, modify, forceDestroy, restore,search};

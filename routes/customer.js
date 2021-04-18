@@ -20,7 +20,4 @@ router.patch("/changeForgotPassword", CustomerController.changeForgotPassword);
 
 router.post("/testCode", testCode);
 
-
-
-// router.put("/profile", AuthController.updateProfile);
 module.exports = router;

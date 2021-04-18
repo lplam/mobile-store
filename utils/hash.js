@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY, EXPIRES_IN } = require("../constants");
-const productModel = require("../models/core/product");
+const {products,configs} = require("../models/core/product");
 
 const encodeToken = (jwtData) => {
   return jwt.sign(jwtData, SECRET_KEY, { expiresIn: EXPIRES_IN });
@@ -49,12 +49,42 @@ const decodeTokenForgotPassWord = (req,res) => {
 };
 
 const testCode = (req,res) => {
-  const query = productModel.find({brand:"Samsung"}).where('name').eq("Xiaomi Star 9 (Chính Hãng)")
-  // query.where('brand').eq("Vsmart")
-  .then((data) =>res.json(data) )
+  // products.find({}).populate({ 
+  //   path: 'configuration',
+  //   }).where('configuration.sound').equals("4 output")
+  //   .then((data) =>{
+  //       // dùng data sau khi populate rồi mới đem đi filter
+  //     res.json(data)
+  //   })
+  //   .catch((err)=>res.json(err))
 
-  // console.log("query", query.where('age').eq("Vsmart"));
-  // res.json(query.where('age').eq("Vsmart"));
+  // return products.findOne({name : "Vivo 22 (Chính Hãng)"}).populate({ path: 'configuration'}).
+  // exec(function (err, product) {
+  //   console.log('The author is: ',product.configuration.body.dimensions);
+  // }); {'configuration.body.dimensions': {'$regex' :`${req.body.keyword}`,'$options' : 'i'}}
+  products.aggregate([
+    { $lookup: {
+      "from": configs.collection.name,
+      "localField": "_id",
+      "foreignField": "_id",
+      "as": "configuration"
+    }}, 
+    {$match : {$or:[
+      {name: {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {brand: {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {discount: {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {'configuration.body.dimensions': {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {'configuration.flatform.chipset': {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {'configuration.display.type': {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {'configuration.display.size': {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+      {description: {'$regex' :`${req.body.keyword}`,'$options' : 'i'}},
+    ]}},
+    {
+      $sort : {createdAt: -1}
+    } 
+  ])
+  .then((data) =>res.json(data))
+  .catch((err)=>res.json(err))
 };
 
 

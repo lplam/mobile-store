@@ -1,12 +1,11 @@
-const customerModel = require("../models/core/customer");
 const adminModel = require("../models/core/admin");
-
 const MidCustomer = require("./CustomerMiddleware");
 const MidAdmin = require("./AdminMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { encodeToken } = require("../utils/hash");
 const { SECRET_KEY, EXPIRES_IN } = require("../constants");
+const mongoose = require("mongoose");
 
 // User
 const login = ({ email, password }) => {
@@ -28,19 +27,27 @@ const login = ({ email, password }) => {
   });
 };
 
-const register = (data) => {
-  const { password, email, phone } = data;
-  return MidCustomer.getUserByEmail(email).then((user) => {
+async function register(data){
+  const { password, email, phone, basket} = data;
+  const userID = new mongoose.Types.ObjectId();
+  await MidCustomer.getUserByEmail(email).then((user) => {
     if (user) {
       return Promise.reject("Email already exist!!");
     }
-    const newUser = {
-      email,
-      phone,
-      password: bcrypt.hashSync(password, 10),
-    };
-    return MidCustomer.create(newUser);
   });
+  const newBasket = {
+    _id: userID,
+    products: basket
+  };
+  await MidCustomer.createBasket(newBasket);
+  const newUser = {
+    _id: userID,
+    email,
+    phone,
+    password: bcrypt.hashSync(password, 10),
+    basket: userID
+  };
+  return await MidCustomer.create(newUser);
 };
 // admin
 const loginAdmin = ({ email, password }) => {

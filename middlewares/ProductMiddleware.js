@@ -63,57 +63,6 @@ async function modify(data) {
       new: true,
     })
     return await products.findOne({ _id: data.query.id}).populate({path: 'configuration'})
-
-  // return getProductByID(data.query.id).then((product) => {
-  //   if (!product) {
-  //     return Promise.reject("Product is not exist!!");
-  //   }
-  //   const bodyProductFields = {
-  //     name: data.body.name,
-  //     brand: data.body.brand,
-  //     discount: data.body.discount,
-  //     description: data.body.description,
-  //   }
-  //   return products.findOneAndUpdate({ _id: data.query.id }, bodyProductFields, {
-  //     new: true,
-  //   })
-  //     .then(() => {
-  //       return getConfigProductByID(data.query.id).then((configProduct) =>{
-  //         if (!configProduct) {
-  //           return Promise.reject("Configration of this Product is not exist!!");
-  //         }
-  //         return configs.findOneAndUpdate({ _id: data.query.id }, data.body.configuration, {
-  //           new: true,
-  //         })
-  //         .then(()=> products.findOne({ _id: data.query.id}).populate({path: 'configuration'}))
-  //       })
-  //     })
-  // });
-
-
-  // res.json( data.body.configuration)
-
-  // return products.aggregate([
-  //   { $lookup: {
-  //     "from": configs.collection.name,
-  //     "localField": "_id",
-  //     "foreignField": "_id",
-  //     "as": "configuration"
-  //   }},
-  //   {
-  //     $match: {_id: ObjectId(data.query.id)}
-  //   },
-  // ])
-
-  // return products.find({})
-  // .populate({ 
-  // path: 'configuration',
-  // match: { _id: data.query.id },
-  // update: data.body.configuration
-  // })
-  // .updateOne({ _id: data.query.id }, data.body, {new: true,})
-  // .then((data) =>{res.json(data)})
-  // .catch((err)=>res.json(err))
 };
  async function destroy(data,res) {
   let product = await getProductByID(data.query.id).catch(() =>Promise.reject("Wrong ID_Product!!"));

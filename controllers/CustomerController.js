@@ -12,4 +12,16 @@ const changeForgotPassword = (req, res) =>{
     .catch((err) => res.json(err))
 }
 
-module.exports = { getProfile,changeForgotPassword };
+const createOrder = (req, res) =>{
+  MidCustomer.createOrder(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+const getOrder = (req, res) =>{
+  MidCustomer.getOrder(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+module.exports = { getProfile,changeForgotPassword,createOrder,getOrder };

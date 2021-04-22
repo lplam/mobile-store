@@ -28,24 +28,18 @@ const login = ({ email, password }) => {
 };
 
 async function register(data){
-  const { password, email, phone, basket} = data;
+  const { password, email, phone} = data;
   const userID = new mongoose.Types.ObjectId();
   await MidCustomer.getUserByEmail(email).then((user) => {
     if (user) {
       return Promise.reject("Email already exist!!");
     }
   });
-  const newBasket = {
-    _id: userID,
-    products: basket
-  };
-  await MidCustomer.createBasket(newBasket);
   const newUser = {
     _id: userID,
     email,
     phone,
     password: bcrypt.hashSync(password, 10),
-    basket: userID
   };
   return await MidCustomer.create(newUser);
 };

@@ -21,7 +21,7 @@ const isCustomerAuth = (req, res, next) =>
         res.status(401).json({ message: "permision denied" });
         return;
       }
-      req.user_id = user[0]._id;
+      req.user_id = user._id;
       next();
     })
   );

@@ -23,7 +23,7 @@ const userOrder = new mongoose.Schema({
         quantity:{ type: Number, default: 0 }
     }],
     totalAmount: { type: Number, default: 0 },
-    history: { type: String, default: "" }
+    history: { type: Object, default: "" }
 });
 
 const orders = mongoose.model("orders", userOrder);

@@ -8,7 +8,7 @@ const getConfigProductDeleted = (product_id) => configs.findOneDeleted({ _id: pr
 const ObjectId = mongoose.Types.ObjectId;
 
 const create = (data) => {
-  const { name, brand, discount, configuration, description } = data;
+  const { name, brand, discount, configuration, description,cost } = data;
   return getProductByName(name).then((product) => {
     if (product) {
       return Promise.reject("Product already exist!!");
@@ -20,7 +20,8 @@ const create = (data) => {
       brand,
       discount,
       configuration: productID,
-      description,  
+      description,
+      cost,  
     });    
     return products.create(newProduct)
     .then((data) => {

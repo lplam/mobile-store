@@ -1,4 +1,5 @@
 const {users} = require("../models/core/customer");
+const {orders} = require("../models/core/order");
 const {products,configs} = require("../models/core/product");
 const bcrypt = require("bcrypt");
 const {decodeTokenForgotPassWord} = require("../utils/hash");
@@ -61,8 +62,44 @@ async function getOrder(req,res) {
             return "Status Wrong!";
     }    
 } 
+async function addProducts(req,res) {
+    let order = await MidOrder.getBasket(req.user_id);
+    if(!order){
+        return Promise.reject("Basket isn't exist!!");
+    } 
+   await orders.findOneAndUpdate({userID: req.user_id, status: 1},{$push:{"products" : req.body.newProducts}},{new:true });
+   let totalAmount = await MidOrder.countTotalAmount(req.user_id);
+   return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });
+}
 
-module.exports = { create, getUserByEmail, getProfile,changeForgotPassword,createOrder,getOrder };
+async function updateBasket(req,res) {
+    let order = await MidOrder.getBasket(req.user_id);
+    if(!order){
+        return Promise.reject("Basket isn't exist!!");
+    } 
+    await orders.findOneAndUpdate({userID: req.user_id, status: 1},req.body,{new:true });
+    return await MidOrder.countTotalAmount(req.user_id);
+}
+
+async function orderComfirmedByCustomer(req,res) {
+    let order = await MidOrder.getBasket(req.user_id);
+    if(!order){
+        return Promise.reject("Basket isn't exist!!");
+    } 
+    let history = await orders.findOne({userID: req.user_id, status: 1},{ history: 0}).populate("products.productID")
+    return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{history:history, status: req.body.status},{new:true });
+}
+
+module.exports = { 
+    create, 
+    getUserByEmail, 
+    getProfile,
+    changeForgotPassword,
+    createOrder,getOrder,
+    addProducts,
+    updateBasket,
+    orderComfirmedByCustomer 
+};
 
 
 

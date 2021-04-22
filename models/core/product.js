@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
   discount: { type: String, default: ""},
   configuration: { type: Schema.Types.ObjectId, ref: 'configs' },
   description: { type: String, default: "" },
+  cost: { type: Number, default: 0 },
   },
   { timestamps: true},
 );

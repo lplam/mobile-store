@@ -24,4 +24,22 @@ const getOrder = (req, res) =>{
     .catch((err) => res.json(err))
 }
 
-module.exports = { getProfile,changeForgotPassword,createOrder,getOrder };
+const addProducts = (req, res) =>{
+  MidCustomer.addProducts(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+const updateBasket = (req, res) =>{
+  MidCustomer.updateBasket(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+const orderComfirmedByCustomer = (req, res) =>{
+  MidCustomer.orderComfirmedByCustomer(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+module.exports = { getProfile,changeForgotPassword,createOrder,getOrder,addProducts,updateBasket,orderComfirmedByCustomer };

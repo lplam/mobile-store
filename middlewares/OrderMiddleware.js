@@ -8,6 +8,11 @@ const getBasket = (user_id)=> {
 const getOrder = (user_id,status)=> {
     return orders.find({userID: user_id, status: status});
 }
+
+const getOrderByConditions = (conditions)=> {
+    return orders.find(conditions);
+}
+
 const countTotalAmount = (user_id) =>{
     return orders.aggregate([
         {
@@ -47,5 +52,22 @@ const countTotalAmount = (user_id) =>{
     ])
 }
 
+const checkQuantityProduct = (products)=> {
+    return products.filter((product)=>{ 
+        return product.quantity > 0;
+    });
+}
+
 const create = (newOrder) => orders.create(newOrder);
-module.exports = { getBasket, getOrder,create,countTotalAmount};
+
+const findOrderAndUpdate = (id, status)=> orders.findOneAndUpdate({_id: id},{status},{new:true });
+
+module.exports = { 
+    getBasket, 
+    getOrder,
+    create,
+    countTotalAmount,
+    checkQuantityProduct,
+    findOrderAndUpdate,
+    getOrderByConditions,
+};

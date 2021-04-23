@@ -67,9 +67,10 @@ async function addProducts(req,res) {
     if(!order){
         return Promise.reject("Basket isn't exist!!");
     } 
-   await orders.findOneAndUpdate({userID: req.user_id, status: 1},{$push:{"products" : req.body.newProducts}},{new:true });
-   let totalAmount = await MidOrder.countTotalAmount(req.user_id);
-   return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });
+    let productsAdded = MidOrder.checkQuantityProduct(req.body.products)
+    await orders.findOneAndUpdate({userID: req.user_id, status: 1},{$push:{"products" : productsAdded}},{new:true });
+    let totalAmount = await MidOrder.countTotalAmount(req.user_id);
+     return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });
 }
 
 async function updateBasket(req,res) {
@@ -77,6 +78,7 @@ async function updateBasket(req,res) {
     if(!order){
         return Promise.reject("Basket isn't exist!!");
     } 
+    req.body.products = MidOrder.checkQuantityProduct(req.body.products)
     await orders.findOneAndUpdate({userID: req.user_id, status: 1},req.body,{new:true });
     return await MidOrder.countTotalAmount(req.user_id);
 }
@@ -90,6 +92,17 @@ async function orderComfirmedByCustomer(req,res) {
     return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{history:history, status: req.body.status},{new:true });
 }
 
+async function deleteProducts(req,res) {
+    let order = await MidOrder.getBasket(req.user_id);
+    if(!order){
+        return Promise.reject("Basket isn't exist!!");
+    } 
+    return await orders.update(
+        {userID: req.user_id, status: 1 },
+        { $pull: { 'products': { _id: req.body._id } } }
+      );
+}
+
 module.exports = { 
     create, 
     getUserByEmail, 
@@ -98,7 +111,8 @@ module.exports = {
     createOrder,getOrder,
     addProducts,
     updateBasket,
-    orderComfirmedByCustomer 
+    orderComfirmedByCustomer,
+    deleteProducts,
 };
 
 

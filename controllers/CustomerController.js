@@ -42,4 +42,19 @@ const orderComfirmedByCustomer = (req, res) =>{
     .catch((err) => res.json(err))
 }
 
-module.exports = { getProfile,changeForgotPassword,createOrder,getOrder,addProducts,updateBasket,orderComfirmedByCustomer };
+const deleteProducts = (req, res) =>{
+  MidCustomer.deleteProducts(req,res)
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err))
+}
+
+module.exports = { 
+  getProfile,
+  changeForgotPassword,
+  createOrder,
+  getOrder,
+  addProducts,
+  updateBasket,
+  orderComfirmedByCustomer,
+  deleteProducts,
+ };

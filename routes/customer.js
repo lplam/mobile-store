@@ -28,6 +28,8 @@ router.put("/order",isCustomerAuth, CustomerController.updateBasket);
 
 router.patch("/order",isCustomerAuth, CustomerController.orderComfirmedByCustomer);
 
+router.delete("/order",isCustomerAuth, CustomerController.deleteProducts);
+
 
 router.post("/testCode", testCode);
 

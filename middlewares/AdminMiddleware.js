@@ -4,6 +4,7 @@ const getDetail = (_id) => adminModel.findById(_id);
 const {sendMailFromAdmin} = require("../utils/commons")
 const MidCustomer = require("../middlewares/CustomerMiddleware");
 const {encodeToken,decodeToken} = require("../utils/hash");
+const MidOrder = require("./OrderMiddleware");
 
 function sendMailForgotPassword(req,res){
     return MidCustomer.getUserByEmail(req.body.email)
@@ -27,5 +28,31 @@ function sendMailForgotPassword(req,res){
       })
       .catch((err) => res.json("Email is not Exist: ",err))
 }
+async function orderComfirmedByAdmin(req,res) {
+  return await MidOrder.findOrderAndUpdate(req.body._id,3);
+}
 
-module.exports = { getAdminByEmail, getDetail,sendMailForgotPassword };
+async function getOrder(req,res) {
+  let orders = await MidOrder.getOrderByConditions(req.body);
+  if(Array.isArray(orders) && orders.length){
+      return orders
+  } 
+  switch(req.body.status){
+      case 1:
+          return "Basket isn't exist!";
+      case 2:
+          return "No Confirmed Orders by Customer Availble";
+      case 3:
+          return "No Confirmed Orders by Administrator Availble";
+      default:
+          return "Status Wrong!";
+  }  
+}
+
+module.exports = { 
+  getAdminByEmail, 
+  getDetail,
+  sendMailForgotPassword,
+  orderComfirmedByAdmin,
+  getOrder,
+ };

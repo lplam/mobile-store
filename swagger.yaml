@@ -19,7 +19,71 @@ tags:
 schemes:
 - "https"
 - "http"
+components:
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
 paths:
+  /admin/order/confirm:
+    post:
+      tags:
+      - "admin"
+      summary: "Admin gets orders"
+      description: ""
+      operationId: "adminConfirm"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: authorization
+        in: header
+        type: string
+        required: true
+      - in: "body"
+        name: "id"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        # schema:
+        #   $ref: "#/definitions/Admin"
+
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+        - bearerAuth: []
+  /admin/order:
+    get:
+      tags:
+      - "admin"
+      summary: "Admin gets orders"
+      description: ""
+      operationId: "adminGetOrders"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "info"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Admin"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      # - petstore_auth:
+      #   - "write:pets"
+      #   - "read:pets"
+        - bearerAuth: []
   /admin/login:
     post:
       tags:
@@ -44,9 +108,10 @@ paths:
         "405":
           description: "Invalid input"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+      # - petstore_auth:
+      #   - "write:pets"
+      #   - "read:pets"
+        - Bearer: []
     put:
       tags:
       - "pet"
@@ -557,17 +622,14 @@ paths:
         "404":
           description: "User not found"
 securityDefinitions:
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
   api_key:
     type: "apiKey"
     name: "api_key"
-    in: "header"
+    in: "header" 
+  bearerAuth:            
+    type: http
+    scheme: bearer
+    bearerFormat: JWT 
 definitions:
   Order:
     type: "object"
